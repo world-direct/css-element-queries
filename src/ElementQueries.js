@@ -154,9 +154,10 @@
             } else {
                 element.elementQueriesSetupInformation = new SetupInformation(element);
                 element.elementQueriesSetupInformation.addOption(options);
-                element.elementQueriesSensor = new ResizeSensor(element, function() {
+                element.elementQueriesSensorHandler = function() {
                     element.elementQueriesSetupInformation.call();
-                });
+                };
+                element.elementQueriesSensor = new ResizeSensor(element, element.elementQueriesSensorHandler);
             }
             element.elementQueriesSetupInformation.call();
 
@@ -445,13 +446,13 @@
     ElementQueries.detach = function(element) {
         if (element.elementQueriesSetupInformation) {
             //element queries
-            element.elementQueriesSensor.detach();
+            element.elementQueriesSensor.detach(element.elementQueriesSensorHandler);
+            delete element.elementQueriesSensorHandler;
             delete element.elementQueriesSetupInformation;
             delete element.elementQueriesSensor;
 
         } else if (element.resizeSensor) {
             //responsive image
-
             element.resizeSensor.detach();
             delete element.resizeSensor;
         } else {
